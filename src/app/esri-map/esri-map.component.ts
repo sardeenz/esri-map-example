@@ -18,7 +18,7 @@ export class EsriMapComponent implements OnInit {
   public maploaded: Element;
 
   @ViewChild('mapViewNode') private mapViewEl: ElementRef;
-
+  @ViewChild(EsriMapComponent) esriMapComponent: EsriMapComponent;
 
   constructor(private esriLoader: EsriLoaderService, ) { }
 
