@@ -1,5 +1,5 @@
-import { Geodata } from './geodata';
-
+// import { Geodata } from './geodata';
+import { Geocode } from './geocode';
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
@@ -12,7 +12,7 @@ export class GeocodeService {
 
   constructor(private http: Http) { }
 
-  getGeometry(address): Observable<Geodata> {
+  getGeometry(address): Observable<Geocode> {
     console.log('geoAddress = ', encodeURI(this.urlgeocoder) + encodeURIComponent(address));
     return this.http.get(encodeURI(this.urlgeocoder) + encodeURIComponent(address)).map((res: Response) => res.json())
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
