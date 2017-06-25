@@ -62,11 +62,9 @@ export class AppComponent implements OnInit {
     this.geocodeService.getGeometry(address).subscribe(geocoderdata => this.geocoderdata = geocoderdata,
       err => console.error(err),
       () => {
-        // console.log('geodata = ', JSON.stringify(this.geocoderdata));
-        // console.log('geodata not stringified = ', this.geocoderdata);
-
+        // TODO: if this.geocoderdata.candidates[0].location is undefined, show an error
+        // maybe show candidates in autocomplete too.
         this.zoomAndSetMarker(this.geocoderdata.candidates[0].location);
-        // this.isInsideCity(this.geodata);
       }
     );
   }
