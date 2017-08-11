@@ -1,13 +1,18 @@
-import { Geocode } from './geocode';
+import { Candidate, Geocode } from './geocode';
 // import { Geodata } from './geodata';
 import { User } from './user';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MdIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { EsriLoaderService } from 'angular-esri-loader';
 import { GeocodeService } from 'app/geocode.service';
 import { EsriMapComponent } from 'app/esri-map/esri-map.component';
+import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/switchMap';
+
 
 @Component({
   selector: 'app-root',
@@ -20,6 +25,9 @@ export class AppComponent implements OnInit {
   public pointGraphic: __esri.Graphic;
   public markerSymbol: __esri.SimpleMarkerSymbol;
   public graphicsLayer: __esri.GraphicsLayer;
+  public newAddress;
+  term = new FormControl();
+  items: Observable<Array<Candidate>>;
 
   @ViewChild(EsriMapComponent) esriMapComponent: EsriMapComponent;
 
@@ -34,6 +42,10 @@ export class AppComponent implements OnInit {
     this.myForm = this._fb.group({
       address: ['', <any>Validators.required],
     });
+                    this.items = this.term.valueChanges
+                 .debounceTime(400)
+                 .distinctUntilChanged()
+                 .switchMap(term => this.geocodeService.getGeometry(term));
   }
 
   /*
@@ -60,19 +72,27 @@ export class AppComponent implements OnInit {
     //     access_token_secret: 'tqd0MN5tb81lID9v8izSCEA77RnzMsg6uiE24qBKlfX3j'
     // }
     // pass the address to the map
+
     this.zoomToAddress(model.address);
   }
 
   zoomToAddress(address) {
     // geocode the address
-    this.geocodeService.getGeometry(address).subscribe(geocoderdata => this.geocoderdata = geocoderdata,
-      err => console.error(err),
-      () => {
-        // TODO: if this.geocoderdata.candidates[0].location is undefined, show an error
-        // maybe show candidates in autocomplete too.
-        this.zoomAndSetMarker(this.geocoderdata.candidates[0].location);
-      }
-    );
+
+    //     this.geocodeService.getGeometry(address).subscribe(geocoderdata => {
+    //   console.log('my data', geocoderdata);
+    // });
+
+
+
+    // this.geocodeService.getGeometry(address).subscribe(geocoderdata => this.geocoderdata = geocoderdata,
+    //   () => {
+    //     // TODO: if this.geocoderdata.candidates[0].location is undefined, show an error
+    //     // maybe show candidates in autocomplete too.
+    //     console.log('this.geocoderdata', this.geocoderdata);
+    //     this.zoomAndSetMarker(this.geocoderdata.candidates[0].location);
+    //   }
+    // );
   }
   zoomAndSetMarker(coords) {
     this.esriLoader.require(['esri/Map', 'esri/layers/GraphicsLayer', 'esri/geometry/Point',

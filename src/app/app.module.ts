@@ -8,6 +8,8 @@ import { MaterialModule, MdButtonModule, MdCheckboxModule } from '@angular/mater
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EsriLoaderService } from 'angular-esri-loader';
 import { GeocodeService } from 'app/geocode.service';
+import {HttpClientModule} from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -17,6 +19,7 @@ import { GeocodeService } from 'app/geocode.service';
   imports: [
     BrowserModule,
     HttpModule,
+    HttpClientModule,
     FormsModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,

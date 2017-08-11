@@ -40,7 +40,6 @@ export class EsriMapComponent implements OnInit {
         Graphic,
         GraphicsLayer
       ]) => {
-
         const mapProperties: __esri.MapProperties = {
           basemap: 'streets-night-vector' as any as __esri.BasemapProperties
         };
@@ -48,7 +47,7 @@ export class EsriMapComponent implements OnInit {
           const sceneViewProperties: __esri.SceneViewProperties = {
           container: this.mapViewEl.nativeElement,
           center: [-78.65, 35.8] as any as __esri.PointProperties,
-          zoom: 12,
+          zoom: 1,
           map
         };
         this.sceneView = new SceneView(sceneViewProperties);
