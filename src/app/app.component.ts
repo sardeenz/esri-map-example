@@ -5,7 +5,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MdIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
-import { EsriLoaderService } from 'angular2-esri-loader';
+import { EsriLoaderService } from 'angular-esri-loader';
 import { GeocodeService } from 'app/geocode.service';
 import { EsriMapComponent } from 'app/esri-map/esri-map.component';
 
@@ -17,7 +17,6 @@ import { EsriMapComponent } from 'app/esri-map/esri-map.component';
 export class AppComponent implements OnInit {
   public myForm: FormGroup; // our model driven form
   geocoderdata: Geocode;
-  public mapView: __esri.MapView;
   public pointGraphic: __esri.Graphic;
   public markerSymbol: __esri.SimpleMarkerSymbol;
   public graphicsLayer: __esri.GraphicsLayer;
@@ -53,6 +52,13 @@ export class AppComponent implements OnInit {
     console.log('isValid = ', isValid);
     console.log('model is ', model);
 
+    // get address data from Twitter
+    // twitter: {
+    //     consumer_key: 'O9wsZfidXPUtnNB21HCxrrXEq',
+    //     consumer_secret: 'j9njg9Leu935sbipDz8jklPNfi7ipdV3DyKRLb2xBSwErv4vEp',
+    //     access_token: '7374632-D07EYGE0IkClZj7ub9g2opd4l53MCaQuM61WuJfz6T',
+    //     access_token_secret: 'tqd0MN5tb81lID9v8izSCEA77RnzMsg6uiE24qBKlfX3j'
+    // }
     // pass the address to the map
     this.zoomToAddress(model.address);
   }
@@ -89,14 +95,12 @@ export class AppComponent implements OnInit {
         });
 
         this.pointGraphic.symbol = this.markerSymbol;
-        this.esriMapComponent.mapView.goTo({
+        this.esriMapComponent.sceneView.goTo({
           center: [coords.x, coords.y],
           zoom: 17
         });
-        this.esriMapComponent.mapView.graphics.removeAll();
-        this.esriMapComponent.mapView.graphics.add(this.pointGraphic);
-        // this.mapView.graphics.removeAll();
-        // this.mapView.graphics.add(this.pointGraphic);
+        // this.esriMapComponent.mapView.graphics.removeAll();
+        this.esriMapComponent.sceneView.graphics.add(this.pointGraphic);
       });
 
   }
