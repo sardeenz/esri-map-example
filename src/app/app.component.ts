@@ -1,3 +1,4 @@
+import { subscribeOn } from 'angular2-esri-loader/node_modules/rxjs/operator/subscribeOn';
 import { Candidate, Geocode } from './geocode';
 // import { Geodata } from './geodata';
 import { User } from './user';
@@ -28,6 +29,10 @@ export class AppComponent implements OnInit {
   public newAddress;
   term = new FormControl();
   items: Observable<Array<Candidate>>;
+  private anyErrors: boolean;
+  private finished: boolean;
+  public subscription;
+  public coords;
 
   @ViewChild(EsriMapComponent) esriMapComponent: EsriMapComponent;
 
@@ -45,7 +50,26 @@ export class AppComponent implements OnInit {
                 this.items = this.myForm.get('address').valueChanges
                  .debounceTime(300)
                  .distinctUntilChanged()
-                 .switchMap(doodoo => this.geocodeService.getGeometry(doodoo));
+                 .switchMap((x) => this.geocodeService.getGeometry(x));
+
+                 // this is getting the last set of coordinates I think.
+                 this.subscription = this.items.subscribe(
+                      x => x.map(res => console.log('x.map = ', this.coords = res.location)),
+                      error => this.anyErrors = true,
+                      () => console.log('finished items subscription')
+                  );
+
+
+                  //                  this.subscription = this.items.subscribe(
+                  //     x => x.map(res =>
+                  //     if (this.myForm.get('address').value === res.address) 
+                  //         this.coords = res.location;
+                  //        ),
+                  //     error => this.anyErrors = true,
+                  //     () => console.log('finished items subscription')
+                  // );
+
+                 //this.zoomAndSetMarker(this.items.forEach);
 
                 //   this.items = this.term.valueChanges
                 //  .debounceTime(200)
@@ -69,6 +93,12 @@ export class AppComponent implements OnInit {
     console.log('isValid = ', isValid);
     console.log('model is ', model);
 
+    console.log('this.items', this.items); // "species"
+
+console.log('subscription = ', this.subscription);
+
+                  console.log('coords now', this.coords);
+
     // get address data from Twitter
     // twitter: {
     //     consumer_key: 'O9wsZfidXPUtnNB21HCxrrXEq',
@@ -77,8 +107,9 @@ export class AppComponent implements OnInit {
     //     access_token_secret: 'tqd0MN5tb81lID9v8izSCEA77RnzMsg6uiE24qBKlfX3j'
     // }
     // pass the address to the map
+    this.zoomAndSetMarker(this.coords);
 
-    this.zoomToAddress(model.address);
+    // this.zoomToAddress(model.address);
   }
 
   zoomToAddress(address) {
