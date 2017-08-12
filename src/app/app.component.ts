@@ -42,10 +42,15 @@ export class AppComponent implements OnInit {
     this.myForm = this._fb.group({
       address: ['', <any>Validators.required],
     });
-                    this.items = this.term.valueChanges
-                 .debounceTime(200)
+                this.items = this.myForm.get('address').valueChanges
+                 .debounceTime(300)
                  .distinctUntilChanged()
-                 .switchMap(term => this.geocodeService.getGeometry(term));
+                 .switchMap(doodoo => this.geocodeService.getGeometry(doodoo));
+
+                //   this.items = this.term.valueChanges
+                //  .debounceTime(200)
+                //  .distinctUntilChanged()
+                //  .switchMap(term => this.geocodeService.getGeometry(term));
   }
 
   /*
