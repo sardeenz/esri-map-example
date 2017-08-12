@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
       address: ['', <any>Validators.required],
     });
                     this.items = this.term.valueChanges
-                 .debounceTime(400)
+                 .debounceTime(200)
                  .distinctUntilChanged()
                  .switchMap(term => this.geocodeService.getGeometry(term));
   }

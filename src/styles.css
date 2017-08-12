@@ -5,3 +5,7 @@
 md-toolbar-row {
     justify-content: space-between;
 }
+
+body {
+    background: lightgray;
+}
